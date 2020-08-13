@@ -1,0 +1,25 @@
+{
+  "name": "flask-by-example",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/m-weitzel/BingoWebAnalysis.git"
+  },
+  "author": "mw",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/m-weitzel/BingoWebAnalysis/issues"
+  },
+  "homepage": "https://github.com/m-weitzel/BingoWebAnalysis#readme"
+  "engines": {
+    "node": "12.15.0",
+    "npm": "6.14.7"
+  } 
+
+}
