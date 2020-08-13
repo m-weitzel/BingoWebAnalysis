@@ -48,7 +48,7 @@ class BingoBoard:
 		return board
 
 	def load_times(self):
-		times = pd.read_csv('/home/pi/OoT-Bingo-Analysis/BingoSheet-v10.csv')
+		times = pd.read_csv('BingoSheet-v10.csv')
 		# times = times.drop(['\n', 'jp', '#8.4 diff'], axis=1)
 		times = times.drop(['jp'], axis=1)
 		times = times[[c for c in times.columns if c[:3] != 'inc']]
@@ -174,7 +174,7 @@ def pull_seed_range(startseed, save=True):
 	if save:
 		goalcounter = Counter(all_seeds.goals.sum())
 		goal_counting_df = pd.DataFrame({'goal': [d[0] for d in goalcounter.items()], 'count': list(goalcounter.values())}).set_index('goal').sort_values('count')
-		goal_counting_df.to_csv(f'/home/pi/OoT-Bingo-Analysis/goals/goals{startseed}-{startseed+99}.csv')
+		goal_counting_df.to_csv(f'goals/goals{startseed}-{startseed+99}.csv')
 		print(f'Saved seeds {startseed} to {startseed+100}.')
 
 
