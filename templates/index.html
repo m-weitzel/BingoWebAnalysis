@@ -20,7 +20,6 @@
  
    <h1>OoT Bingo Tournament 2020 - Goal Statistics</h1>
    <div>
-     
      <div id="goals">
        <table id="myTable" class="table table-striped" data-order='[[1, "desc"]]' data-page-length='250'>
         <thead>
@@ -31,7 +30,7 @@
           <th>Pick Rate</th>
          </tr> 
         </thead>
-	<tbody>
+      <tbody>
         {% for goal in goals %}
          <tr>
           <td>{{ goal[0] }}</td>
@@ -40,7 +39,7 @@
           <td>{{ "%.1f %%" % goal[3] }}</td>
          </tr>
         {% endfor %}
-	</tbody>
+      </tbody>
        </table>
    </div>
   

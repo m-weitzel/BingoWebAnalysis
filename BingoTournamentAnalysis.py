@@ -187,6 +187,7 @@ def main():
 	pick_df = pd.DataFrame({'goal': [d[0] for d in picked_goalcounter.items()], 'pick count': list(picked_goalcounter.values())}).set_index('goal')
 
 	goals_ap_df = goal_counting_df.merge(pick_df, how='outer', left_index=True, right_index=True).sort_values('count', ascending=False)
+	goals_ap_df['pick count'] = goals_ap_df['pick count'].fillna(0).astype('int')
 	goals_ap_df['pick%'] = goals_ap_df.apply(lambda r: r['pick count']/r['count']*100, axis=1)
 	goals_ap_df = goals_ap_df.sort_values(by='pick%', ascending=False)
 	goals_ap_df.to_csv('goals.csv')
