@@ -117,7 +117,9 @@ def main():
 		# 'witty-nocturne-5332', # Tob3000 vs. PsyMarth
 		# 'clumsy-ganondorf-3762', #AverageGreg vs. MutantAura
 		# 'salty-octorok-5065', # Xanra vs. Myelin
-		'scruffy-barinade-0218', #MatttInTheHat vs. noface099
+		# 'scruffy-barinade-0218',  # MatttInTheHat vs. noface099
+		'legendary-lullaby-7764',  # Fenyan vs. Davpat
+		'fancy-dekutree-7025',  # FantaTanked vs. mgbgnr
 		
 		
 		# Add new races here
