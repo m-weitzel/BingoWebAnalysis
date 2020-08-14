@@ -16,10 +16,12 @@
   </script>
  </head>
  <body>
-   <h1>OoT Bingo Tournament 2020 - Goal Statistics</h1>
+   <h1>OoT Bingo Tournament 2020 - Statistics</h1>
    <h2>Total races: {{ total_races }}</h2>
-     <div id="goals">
+    
+     <div id="content">
        <table id="myTable" class="table table-striped" data-order='[[1, "desc"]]' data-page-length='250'>
+        {% block tablecontent %}
         <thead>
          <tr>
           <th>Goal</th>
@@ -30,7 +32,7 @@
           <th>Win Rate</th>
          </tr> 
         </thead>
-      <tbody>
+        <tbody>
         {% for goal in goals %}
          <tr>
           <td>{{ goal[0] }}</td>
@@ -41,8 +43,10 @@
           <td>{{ "%.1f %%" % goal[5]}}</td>
          </tr>
         {% endfor %}
-      </tbody>
+        </tbody>
+        {% endblock %}
        </table>
+       
    </div>
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>

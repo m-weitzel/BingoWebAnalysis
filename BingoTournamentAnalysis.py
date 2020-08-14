@@ -243,6 +243,8 @@ def main():
 	player_df = player_df.merge(pd.DataFrame({'name': [p.name for p in player_list],
 									'average': [pd.to_timedelta(p.times).median() for p in player_list]}).set_index('name'),
 									how='outer', left_index=True, right_index=True)
+									
+	player_df.to_csv('players.csv')
 
 	print(goals_ap_df)
 	return goals_ap_df, player_df
