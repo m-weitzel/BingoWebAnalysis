@@ -80,6 +80,20 @@ class Racer:
 		self.rows = list()
 		self.seeds = list()
 
+	def calc_mean_median(self):
+		actual_times = list()
+		for t in self.times:
+			if t is not 'nan':
+				actual_times.append(t)
+		if len(actual_times) < 1:
+			return 'nan', 'nan'
+		else:
+			actual_times = pd.to_timedelta(actual_times)
+			mean_dt = actual_times.mean().components
+			median_dt = actual_times.median().components
+			return f'{mean_dt.hours}:{str(mean_dt.minutes).zfill(2)}:{str(mean_dt.seconds).zfill(2)}', \
+				   f'{median_dt.hours}:{str(median_dt.minutes).zfill(2)}:{str(median_dt.seconds).zfill(2)}'
+
 
 def pull_races(new_rooms):
 	chrome_options = Options()
@@ -104,6 +118,7 @@ def load_races():
 		if f.endswith('.pickle'):
 			loaded_race_results.append(pickle.load(open(f'results/{f}', 'rb')))
 	return loaded_race_results
+
 
 def main():
 
@@ -139,8 +154,6 @@ def main():
 	winning_goals_list = list()
 
 	player_df = pd.DataFrame(columns=['name', 'wins', 'losses']).set_index('name')
-	player_df = player_df.append({'name': 'PhoenixFeather', 'wins': 0, 'losses': 0}, ignore_index=True).set_index('name')
-
 	for race_result in all_race_results:
 
 		print(f'{race_result.racer1} got a {race_result.time1} with {race_result.row_p1}.')
@@ -169,7 +182,7 @@ def main():
 		else:
 			r = Racer(race_result.racer1)
 			r.rows.append(race_result.row_p1)
-			if race_result.time2 == '—':
+			if race_result.time1 == '—':
 				r.times.append('nan')
 			else:
 				r.times.append(race_result.time1)
@@ -237,11 +250,9 @@ def main():
 	goals_ap_df = goals_ap_df.sort_values(by='pick%', ascending=False)
 	goals_ap_df.to_csv('goals.csv')
 
+	means_medians = [p.calc_mean_median() for p in player_list]
 	player_df = player_df.merge(pd.DataFrame({'name': [p.name for p in player_list],
-									'average': [pd.to_timedelta(p.times).mean() for p in player_list]}).set_index('name'),
-									how='outer', left_index=True, right_index=True)
-	player_df = player_df.merge(pd.DataFrame({'name': [p.name for p in player_list],
-									'average': [pd.to_timedelta(p.times).median() for p in player_list]}).set_index('name'),
+									'average': [m[0] for m in means_medians], 'median': [m[1] for m in means_medians]}).set_index('name'),
 									how='outer', left_index=True, right_index=True)
 									
 	player_df.to_csv('players.csv')
