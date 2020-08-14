@@ -134,6 +134,7 @@ def main():
 	picked_goals_list = list()
 	list_of_player_names = list()
 	player_list = list()
+	winning_goals_list = list()
 
 	for race_result in all_race_results:
 
@@ -178,6 +179,13 @@ def main():
 			r.seeds.append(race_result.seed)
 			player_list.append(r)
 			list_of_player_names.append(race_result.racer2)
+		try:
+			if race_result.time1 < race_result.time2:
+				winning_goals_list.append(room_board[room_board.row == race_result.row_p1]['goals'].item())
+			else:
+				winning_goals_list.append(room_board[room_board.row == race_result.row_p2]['goals'].item())
+		except ValueError:
+			pass
 
 	available_goals_list = [inner for outer in available_goals_list for inner in outer]
 	
@@ -189,15 +197,24 @@ def main():
 	picked_goalcounter = Counter(picked_goals_list)
 	pick_df = pd.DataFrame({'goal': [d[0] for d in picked_goalcounter.items()], 'pick count': list(picked_goalcounter.values())}).set_index('goal')
 
+	winning_goals_list = [inner for outer in winning_goals_list for inner in outer]
+	winning_counter = Counter(winning_goals_list)
+	winning_df = pd.DataFrame({'goal': [d[0] for d in winning_counter.items()], 'win count': list(winning_counter.values())}).set_index('goal')
+
 	goals_ap_df = goal_counting_df.merge(pick_df, how='outer', left_index=True, right_index=True).sort_values('count', ascending=False)
+	goals_ap_df = goals_ap_df.merge(winning_df, how='outer', left_index=True, right_index=True).sort_values('count', ascending=False)
+
 	goals_ap_df['pick count'] = goals_ap_df['pick count'].fillna(0).astype('int')
-	goals_ap_df['pick%'] = goals_ap_df.apply(lambda r: r['pick count']/r['count']*100, axis=1)
+	goals_ap_df['win count'] = goals_ap_df['win count'].fillna(0).astype('int')
+	goals_ap_df['pick%'] = goals_ap_df.apply(lambda r: r['pick count']/r['count']*100, axis=1).round(1)
+	goals_ap_df['win%'] = goals_ap_df.apply(lambda r: r['win count']/r['pick count']*100, axis=1).fillna(0).round(1)
 	goals_ap_df = goals_ap_df.sort_values(by='pick%', ascending=False)
 	goals_ap_df.to_csv('goals.csv')
 
 	print(goals_ap_df)
 	return goals_ap_df
-	
+
+
 if __name__ == '__main__':
 	main()
 
