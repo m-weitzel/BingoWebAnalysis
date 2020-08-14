@@ -6,6 +6,7 @@ import pickle
 import os
 from collections import Counter
 import pandas as pd
+import numpy as np
 
 
 def parse_rows(text):
@@ -129,13 +130,16 @@ def main():
 
 
 
-	all_race_results = pull_races(tournament_race_rooms)
+	# all_race_results = pull_races(tournament_race_rooms)
 	all_race_results = load_races()
 	available_goals_list = list()
 	picked_goals_list = list()
 	list_of_player_names = list()
 	player_list = list()
 	winning_goals_list = list()
+
+	player_df = pd.DataFrame(columns=['name', 'wins', 'losses']).set_index('name')
+	player_df = player_df.append({'name': 'PhoenixFeather', 'wins': 0, 'losses': 0}, ignore_index=True).set_index('name')
 
 	for race_result in all_race_results:
 
@@ -156,37 +160,58 @@ def main():
 		if race_result.racer1 in list_of_player_names:
 			for p in player_list:
 				if p.name == race_result.racer1:
-					p.times.append(race_result.time1)
-					p.rows.append(race_result.row_p1)
+					if race_result.time1 == '—':
+						p.times.append(race_result.time1)
+					else:
+						p.rows.append(race_result.row_p1)
 					p.seeds.append(race_result.seed)
+
 		else:
 			r = Racer(race_result.racer1)
 			r.rows.append(race_result.row_p1)
-			r.times.append(race_result.time1)
+			if race_result.time2 == '—':
+				r.times.append('nan')
+			else:
+				r.times.append(race_result.time1)
 			r.seeds.append(race_result.seed)
 			player_list.append(r)
 			list_of_player_names.append(race_result.racer1)
+			player_df = player_df.append(pd.DataFrame({'wins':0, 'losses': 0}, index=[race_result.racer1]))
 
 		if race_result.racer2 in list_of_player_names:
 				for p in player_list:
 					if p.name == race_result.racer2:
-						p.times.append(race_result.time2)
+						if race_result.time2 == '—':
+							p.times.append('nan')
+						else:
+							p.times.append(race_result.time2)
 						p.rows.append(race_result.row_p2)
 						p.seeds.append(race_result.seed)
 		else:
 			r = Racer(race_result.racer2)
 			r.rows.append(race_result.row_p2)
-			r.times.append(race_result.time2)
+			if race_result.time2 == '—':
+				r.times.append('nan')
+			else:
+				r.times.append(race_result.time2)
 			r.seeds.append(race_result.seed)
 			player_list.append(r)
 			list_of_player_names.append(race_result.racer2)
-		try:
-			if race_result.time1 < race_result.time2:
+			player_df = player_df.append(pd.DataFrame({'wins':0, 'losses': 0}, index=[race_result.racer2]))
+		if race_result.time1 < race_result.time2:
+			player_df.loc[race_result.racer1, 'wins'] += 1
+			player_df.loc[race_result.racer2, 'losses'] += 1
+			try:
 				winning_goals_list.append(room_board[room_board.row == race_result.row_p1]['goals'].item())
-			else:
+			except ValueError:
+				pass
+		else:
+			player_df.loc[race_result.racer2, 'wins'] += 1
+			player_df.loc[race_result.racer1, 'losses'] += 1
+			try:
 				winning_goals_list.append(room_board[room_board.row == race_result.row_p2]['goals'].item())
-		except ValueError:
-			pass
+			except ValueError:
+				pass
 
 	available_goals_list = [inner for outer in available_goals_list for inner in outer]
 	
@@ -212,8 +237,15 @@ def main():
 	goals_ap_df = goals_ap_df.sort_values(by='pick%', ascending=False)
 	goals_ap_df.to_csv('goals.csv')
 
+	player_df = player_df.merge(pd.DataFrame({'name': [p.name for p in player_list],
+									'average': [pd.to_timedelta(p.times).mean() for p in player_list]}).set_index('name'),
+									how='outer', left_index=True, right_index=True)
+	player_df = player_df.merge(pd.DataFrame({'name': [p.name for p in player_list],
+									'average': [pd.to_timedelta(p.times).median() for p in player_list]}).set_index('name'),
+									how='outer', left_index=True, right_index=True)
+
 	print(goals_ap_df)
-	return goals_ap_df
+	return goals_ap_df, player_df
 
 
 if __name__ == '__main__':
