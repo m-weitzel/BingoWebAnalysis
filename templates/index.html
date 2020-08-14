@@ -19,7 +19,7 @@
  <body>
  
    <h1>OoT Bingo Tournament 2020 - Goal Statistics</h1>
-   <h2>Last update: ...</h2>
+   <h2>Total races: {{ total_races }}</h2>
    <div>
      <div id="goals">
        <table id="myTable" class="table table-striped" data-order='[[1, "desc"]]' data-page-length='250'>
@@ -28,7 +28,9 @@
           <th>Goal</th>
           <th>Picked</th>
           <th>On Boards</th>
+          <th>Wins</th>
           <th>Pick Rate</th>
+          <th>Win Rate</th>
          </tr> 
         </thead>
       <tbody>
@@ -37,7 +39,9 @@
           <td>{{ goal[0] }}</td>
           <td>{{ goal[2] }}</td>
           <td>{{ goal[1] }}</td>
-          <td>{{ "%.1f %%" % goal[3] }}</td>
+          <td>{{ goal[3] }}</td>
+          <td>{{ "%.1f %%" % goal[4]}}</td>
+          <td>{{ "%.1f %%" % goal[5]}}</td>
          </tr>
         {% endfor %}
       </tbody>

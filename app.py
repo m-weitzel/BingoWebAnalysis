@@ -10,10 +10,10 @@ app.config.from_object(os.environ['APP_SETTINGS'])
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-	goal_df_repr = return_goallist()
+	goal_df_repr, total_races = return_goallist()
 	# return render_template('index.html', goals=goal_df_repr[0], occ=goal_df_repr[1],
 	#									 picks=goal_df_repr[2], pickpct=goal_df_repr[3])
-	return render_template('index.html', goals=goal_df_repr)
+	return render_template('index.html', goals=goal_df_repr, total_races=total_races)
 
 
 @app.route('/<name>')
