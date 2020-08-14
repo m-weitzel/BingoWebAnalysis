@@ -16,9 +16,10 @@
   </script>
  </head>
  <body>
-   <h1>OoT Bingo Tournament 2020 - Statistics</h1>
+   {% block header %}
+   <h1>OoT Bingo Tournament 2020 - Goal Statistics</h1>
    <h2>Total races: {{ total_races }}</h2>
-    
+   {% endblock %}
      <div id="content">
        <table id="myTable" class="table table-striped" data-order='[[1, "desc"]]' data-page-length='250'>
         {% block tablecontent %}

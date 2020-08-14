@@ -41,7 +41,7 @@ def parse_rows(text):
 	return 'a dirty blank'
 
 class TournamentRace:
-	def __init__(self, race_room, driver):
+	def __init__(self, race_room, driver, filter_list=('Myelin', 'Jake Wright')):		
 		driver.get(f"https://racetime.gg/oot/{race_room}")
 		content = driver.page_source
 		soup = BeautifulSoup(content, features="html.parser")
@@ -61,11 +61,19 @@ class TournamentRace:
 		except AttributeError:
 			self.row_p2 = 'a dirty blank'
 
-		if False: #(self.racer2 == 'Myelin') | (self.racer2 == 'Jake Wright'):
+		if self.racer1 in filter_list:
+					self.racer1 = racer_entries[2].find_next('span', class_='name').text
+					self.time1 = racer_entries[2].find_next('time', class_='finish-time').text
+					try:
+						self.row_p1 = parse_rows(racer_entries[2].find_next('span', class_='text').text)
+					except AttributeError:
+						self.row_p1 = 'a dirty blank'
+		
+		if self.racer2 in filter_list:
 			self.racer2 = racer_entries[2].find_next('span', class_='name').text
 			self.time2 = racer_entries[2].find_next('time', class_='finish-time').text
 			try:
-				self.row_p2 = parse_rows(racer_entries[1].find_next('span', class_='text').text)
+				self.row_p2 = parse_rows(racer_entries[2].find_next('span', class_='text').text)
 			except AttributeError:
 				self.row_p2 = 'a dirty blank'
 
@@ -123,21 +131,25 @@ def load_races():
 def main():
 
 	tournament_race_rooms = [
-		 # 'frantic-heartcontainer-2442', # blinkzy vs. PhoenixFeather
-		 # 'overpowered-dampe-7225', # ZAR vs MikeKatz45
-		 # 'mysterious-dampe-5521', # Titou vs Coffeepot
-		 # 'chaotic-temple-4289', # Gombill vs. Countdown, includes Myelin
-		 # 'speedy-wallet-6331', # Timato vs. gc_one
-		 # 'brainy-fairy-1215', # Link11 vs. Runnerguy2489, includes Jake Wright
-		 # 'lazy-cow-8260', # scaramanga vs. Nalle
-		 # 'perfect-anubis-4156', # QuickKiran vs. Chromium_Light
-		 # 'witty-nocturne-5332', # Tob3000 vs. PsyMarth
-		 # 'clumsy-ganondorf-3762', #AverageGreg vs. MutantAura
-		 # 'salty-octorok-5065', # Xanra vs. Myelin
-		 # 'scruffy-barinade-0218',  # MatttInTheHat vs. noface099
-		 # 'legendary-lullaby-7764',  # Fenyan vs. Davpat
-		 # 'fancy-dekutree-7025',  # FantaTanked vs. mgbgnr
-		 # 'curious-colossus-9627', #Bonooru vs. Tashman91
+		'frantic-heartcontainer-2442', # blinkzy vs. PhoenixFeather
+		'overpowered-dampe-7225', # ZAR vs MikeKatz45
+		'mysterious-dampe-5521', # Titou vs Coffeepot
+		'chaotic-temple-4289', # Gombill vs. Countdown, includes Myelin
+		'speedy-wallet-6331', # Timato vs. gc_one
+		'brainy-fairy-1215', # Link11 vs. Runnerguy2489, includes Jake Wright
+		'lazy-cow-8260', # scaramanga vs. Nalle
+		'perfect-anubis-4156', # QuickKiran vs. Chromium_Light
+		'witty-nocturne-5332', # Tob3000 vs. PsyMarth
+		'clumsy-ganondorf-3762', #AverageGreg vs. MutantAura
+		'scruffy-barinade-0218',  # MatttInTheHat vs. noface099
+		'legendary-lullaby-7764',  # Fenyan vs. Davpat
+		'fancy-dekutree-7025',  # FantaTanked vs. mgbgnr'''
+		'curious-colossus-9627', #Bonooru vs. Tashman91
+		
+		
+		# Filter-relevant races
+		
+		# 'salty-octorok-5065' # Xanra vs. Myelin
 		
 		
 		# Add new races here
@@ -145,7 +157,7 @@ def main():
 
 
 
-	# all_race_results = pull_races(tournament_race_rooms)
+	all_race_results = pull_races(tournament_race_rooms)
 	all_race_results = load_races()
 	available_goals_list = list()
 	picked_goals_list = list()
