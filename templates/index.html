@@ -9,20 +9,23 @@
   <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
   <script src="//cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
-  <script>
-  $(document).ready( function () {
-      $('#myTable').DataTable();
-  } );
-  </script>
+  
  </head>
  <body>
    {% block header %}
    <h1>OoT Bingo Tournament 2020 - Goal Statistics</h1>
    <h2>Total races: {{ total_races }}</h2>
+   <br>
+   <a href='/players'>Go to Player Statistics</a>
    {% endblock %}
      <div id="content">
+       {% block tablecontent %}
        <table id="myTable" class="table table-striped" data-order='[[1, "desc"]]' data-page-length='250'>
-        {% block tablecontent %}
+        <script>
+        $(document).ready( function () {
+            $('#myTable').DataTable();
+        } );
+        </script>
         <thead>
          <tr>
           <th>Goal</th>
@@ -45,8 +48,9 @@
          </tr>
         {% endfor %}
         </tbody>
-        {% endblock %}
+        
        </table>
+       {% endblock %}
        
    </div>
   
