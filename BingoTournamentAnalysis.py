@@ -11,7 +11,7 @@ import numpy as np
 
 def parse_rows(text):
 	text = text.lower()
-	if any([c in text for c in ['col1', 'col 1', 'c1', 'c 1']]):
+	if any([c in text for c in ['row1', 'row 1', 'r1', 'r 1']]):
 		return 'row1'
 	if any([c in text for c in ['row2', 'row 2', 'r2', 'r 2']]):
 		return 'row2'
@@ -87,6 +87,8 @@ class Racer:
 		self.times = list()
 		self.rows = list()
 		self.seeds = list()
+		self.forfeits = 0
+		self.blanks = 0
 
 	def calc_mean_median(self):
 		actual_times = list()
@@ -160,7 +162,7 @@ def main():
 
 
 
-	all_race_results = pull_races(tournament_race_rooms)
+	# all_race_results = pull_races(tournament_race_rooms)
 	all_race_results = load_races()
 	available_goals_list = list()
 	picked_goals_list = list()
@@ -189,16 +191,22 @@ def main():
 			for p in player_list:
 				if p.name == race_result.racer1:
 					if race_result.time1 == '—':
-						p.times.append(race_result.time1)
+						p.times.append('nan')
 					else:
-						p.rows.append(race_result.row_p1)
+						p.times.append(race_result.time1)
+					if race_result.row_p1 == 'a dirty blank':
+						p.blanks += 1
+					p.rows.append(race_result.row_p1)
 					p.seeds.append(race_result.seed)
 
 		else:
 			r = Racer(race_result.racer1)
 			r.rows.append(race_result.row_p1)
+			if race_result.row_p1 == 'a dirty blank':
+				r.blanks += 1
 			if race_result.time1 == '—':
 				r.times.append('nan')
+				r.forfeits += 1
 			else:
 				r.times.append(race_result.time1)
 			r.seeds.append(race_result.seed)
@@ -214,12 +222,17 @@ def main():
 						else:
 							p.times.append(race_result.time2)
 						p.rows.append(race_result.row_p2)
+						if race_result.row_p2 == 'a dirty blank':
+							p.blanks += 1
 						p.seeds.append(race_result.seed)
 		else:
 			r = Racer(race_result.racer2)
 			r.rows.append(race_result.row_p2)
+			if race_result.row_p2 == 'a dirty blank':
+				r.blanks += 1
 			if race_result.time2 == '—':
 				r.times.append('nan')
+				r.forfeits += 1
 			else:
 				r.times.append(race_result.time2)
 			r.seeds.append(race_result.seed)
@@ -267,7 +280,8 @@ def main():
 
 	means_medians = [p.calc_mean_median() for p in player_list]
 	player_df = player_df.merge(pd.DataFrame({'name': [p.name for p in player_list],
-									'average': [m[0] for m in means_medians], 'median': [m[1] for m in means_medians]}).set_index('name'),
+									'average': [m[0] for m in means_medians], 'median': [m[1] for m in means_medians],
+									'forfeits': [p.forfeits for p in player_list], 'blanks': [p.blanks for p in player_list]}).set_index('name'),
 									how='outer', left_index=True, right_index=True)
 									
 	player_df.to_csv('players.csv')
