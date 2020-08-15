@@ -131,7 +131,7 @@ def load_races():
 def main():
 
 	tournament_race_rooms = [
-		'frantic-heartcontainer-2442', # blinkzy vs. PhoenixFeather
+		''''frantic-heartcontainer-2442', # blinkzy vs. PhoenixFeather
 		'overpowered-dampe-7225', # ZAR vs MikeKatz45
 		'mysterious-dampe-5521', # Titou vs Coffeepot
 		'chaotic-temple-4289', # Gombill vs. Countdown, includes Myelin
@@ -143,8 +143,11 @@ def main():
 		'clumsy-ganondorf-3762', #AverageGreg vs. MutantAura
 		'scruffy-barinade-0218',  # MatttInTheHat vs. noface099
 		'legendary-lullaby-7764',  # Fenyan vs. Davpat
-		'fancy-dekutree-7025',  # FantaTanked vs. mgbgnr'''
-		'curious-colossus-9627', #Bonooru vs. Tashman91
+		'fancy-dekutree-7025',  # FantaTanked vs. mgbgnr
+		'curious-colossus-9627', #Bonooru vs. Tashman91 '''
+		'prudent-heartcontainer-3610', # Fleush vs. DiamondFlash27, includes xwillmarktheplace
+		'speedy-wallet-6331', # Timato vs. gc_one
+		'disco-nabooru-0288', # xwillmarktheplace vs. moosecrap
 		
 		
 		# Filter-relevant races
