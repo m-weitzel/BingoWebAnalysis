@@ -133,7 +133,7 @@ def load_races():
 def main():
 
 	tournament_race_rooms = [
-		# 'frantic-heartcontainer-2442', # blinkzy vs. PhoenixFeather
+		#'frantic-heartcontainer-2442', # blinkzy vs. PhoenixFeather
 		#'overpowered-dampe-7225', # ZAR vs MikeKatz45
 		#'mysterious-dampe-5521', # Titou vs Coffeepot
 		#'chaotic-temple-4289', # Gombill vs. Countdown, includes Myelin
@@ -146,25 +146,23 @@ def main():
 		#'scruffy-barinade-0218',  # MatttInTheHat vs. noface099
 		#'legendary-lullaby-7764',  # Fenyan vs. Davpat
 		#'fancy-dekutree-7025',  # FantaTanked vs. mgbgnr
-		#'curious-colossus-9627', #Bonooru vs. Tashman91 
-		
-		'prudent-heartcontainer-3610', # Fleush vs. DiamondFlash27, includes xwillmarktheplace
-		#'speedy-wallet-6331', # Timato vs. gc_one
-		
+		#'curious-colossus-9627', #Bonooru vs. Tashman91 		
+		#'prudent-heartcontainer-3610', # Fleush vs. DiamondFlash27, includes xwillmarktheplace
+		#'speedy-wallet-6331', # Timato vs. gc_one		
 		#'lucky-longshot-1478', # Moose vs. Princess Kayla
-		
+		'critical-smallkey-2398' # Lake_oot vs. Midboss
 		
 		# Filter-relevant races
 		
-		# 'salty-octorok-5065' # Xanra vs. Myelin
-		#'disco-nabooru-0288', # xwillmarktheplace vs. moosecrapfi
+		#'salty-octorok-5065', # Xanra vs. Myelin
+		#'disco-nabooru-0288', # xwillmarktheplace vs. moosecrap
 		
 		# Add new races here
 	]
 
 
 
-	# all_race_results = pull_races(tournament_race_rooms)
+	all_race_results = pull_races(tournament_race_rooms)
 	all_race_results = load_races()
 	available_goals_list = list()
 	picked_goals_list = list()
