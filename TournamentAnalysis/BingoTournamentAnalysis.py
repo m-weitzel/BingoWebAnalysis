@@ -12,40 +12,41 @@ from BingoTools import find_goal_combinations
 
 class TournamentRace:
 	def __init__(self, race_room, driver, filter_list=()):#'Myelin', 'Jake Wright', 'xwillmarktheplace')):
-		driver.get(f"https://racetime.gg/oot/{race_room}")
+		driver.get(f"https://racetime.gg/oot/{race_room[0]}")
 		content = driver.page_source
 		soup = BeautifulSoup(content, features="html.parser")
 
 		racer_entries = soup.find_all('li', class_='entrant-row')
-		self.racer1 = racer_entries[0].find_next('span', class_='name').text
-		self.time1 = racer_entries[0].find_next('time', class_='finish-time').text
-		self.racer2 = racer_entries[1].find_next('span', class_='name').text
-		self.time2 = racer_entries[1].find_next('time', class_='finish-time').text
+
+		if race_room[1]:
+			re_indices = [0, 0]
+			designated_racers = race_room[1], race_room[2]
+			for re_index, re in enumerate(racer_entries):
+				next_racer = re.find_next('span', class_='name').text
+				if next_racer == designated_racers[0]:
+					self.racer1 = next_racer
+					re_indices[0] = re_index
+				if next_racer == designated_racers[1]:
+					self.racer2 = next_racer
+					re_indices[1] = re_index
+			re_indices = tuple(re_indices)
+		else:
+			re_indices = (0, 1)
+
+			self.racer1 = racer_entries[re_indices[0]].find_next('span', class_='name').text
+			self.racer2 = racer_entries[re_indices[1]].find_next('span', class_='name').text
+
+		self.time1 = racer_entries[re_indices[0]].find_next('time', class_='finish-time').text
+		self.time2 = racer_entries[re_indices[1]].find_next('time', class_='finish-time').text
 
 		try:
-			self.row_p1 = parse_rows(racer_entries[0].find_next('span', class_='text').text)
+			self.row_p1 = parse_rows(racer_entries[re_indices[0]].find_next('span', class_='text').text)
 		except AttributeError:
 			self.row_p1 = 'a dirty blank'
 		try:
-			self.row_p2 = parse_rows(racer_entries[1].find_next('span', class_='text').text)
+			self.row_p2 = parse_rows(racer_entries[re_indices[1]].find_next('span', class_='text').text)
 		except AttributeError:
 			self.row_p2 = 'a dirty blank'
-
-		if self.racer1 in filter_list:
-					self.racer1 = racer_entries[2].find_next('span', class_='name').text
-					self.time1 = racer_entries[2].find_next('time', class_='finish-time').text
-					try:
-						self.row_p1 = parse_rows(racer_entries[2].find_next('span', class_='text').text)
-					except AttributeError:
-						self.row_p1 = 'a dirty blank'
-
-		if self.racer2 in filter_list:
-			self.racer2 = racer_entries[2].find_next('span', class_='name').text
-			self.time2 = racer_entries[2].find_next('time', class_='finish-time').text
-			try:
-				self.row_p2 = parse_rows(racer_entries[2].find_next('span', class_='text').text)
-			except AttributeError:
-				self.row_p2 = 'a dirty blank'
 
 		self.seed = soup.find_all('span', class_='info')[0].find_next('a').text.split('=')[1].split('&')[0]
 		self.board = BingoBoard(self.seed)
@@ -118,7 +119,7 @@ def pull_races(new_rooms):
 	race_result_list = list()
 	for room in new_rooms:
 		race_result = TournamentRace(room, driver)
-		pickle.dump(race_result, open(f'results/{room}.pickle', 'wb'))
+		pickle.dump(race_result, open(f'results/{room[0]}.pickle', 'wb'))
 		race_result_list.append(race_result)
 	driver.quit()
 	return race_result_list
@@ -136,30 +137,30 @@ def load_races():
 def main():
 
 	tournament_race_rooms = [
-		#'frantic-heartcontainer-2442', # blinkzy vs. PhoenixFeather
-		#'overpowered-dampe-7225', # ZAR vs MikeKatz45
-		#'mysterious-dampe-5521', # Titou vs Coffeepot
-		#'chaotic-temple-4289', # Gombill vs. Countdown, includes Myelin
-		#'speedy-wallet-6331', # Timato vs. gc_one
-		#'brainy-fairy-1215', # Link11 vs. Runnerguy2489, includes Jake Wright
-		#'lazy-cow-8260', # scaramanga vs. Nalle
-		#'perfect-anubis-4156', # QuickKiran vs. Chromium_Light
-		#'witty-nocturne-5332', # Tob3000 vs. PsyMarth
-		#'clumsy-ganondorf-3762', #AverageGreg vs. MutantAura
-		#'scruffy-barinade-0218',  # MatttInTheHat vs. noface099
-		#'legendary-lullaby-7764',  # Fenyan vs. Davpat
-		#'fancy-dekutree-7025',  # FantaTanked vs. mgbgnr
-		#'curious-colossus-9627', #Bonooru vs. Tashman91
-		#'prudent-heartcontainer-3610', # Fleush vs. DiamondFlash27, includes xwillmarktheplace
-		#'lucky-longshot-1478', # Moose vs. Princess Kayla
-		'critical-smallkey-2398', # Lake_oot vs. Midboss
-		'sublime-cow-6857', # Shaggy vs. Hapenfors
-		'clumsy-heartpiece-9095' # Amateseru vs. Condor
+		('frantic-heartcontainer-2442','',''),                   # blinkzy vs. PhoenixFeather
+		('overpowered-dampe-7225','',''),                        # ZAR vs MikeKatz45
+		('mysterious-dampe-5521','',''),                         # Titou vs Coffeepot
+		('chaotic-temple-4289','Gombill','Countdown'),           # Gombill vs. Countdown, includes Myelin
+		('speedy-wallet-6331', '',''),                           # Timato vs. gc_one
+		('brainy-fairy-1215', 'Link11','Runnerguy2489'),         # Link11 vs. Runnerguy2489, includes Jake Wright
+		('lazy-cow-8260','',''),                                 # scaramanga vs. Nalle
+		('perfect-anubis-4156','',''),                           # QuickKiran vs. Chromium_Light
+		('witty-nocturne-5332','',''),                           # Tob3000 vs. PsyMarth
+		('clumsy-ganondorf-3762','',''),                         # AverageGreg vs. MutantAura
+		('scruffy-barinade-0218','',''),                         # MatttInTheHat vs. noface099
+		('legendary-lullaby-7764','',''),                        # Fenyan vs. Davpat
+		('fancy-dekutree-7025','',''),                           # FantaTanked vs. mgbgnr
+		('curious-colossus-9627','',''),                         # Bonooru vs. Tashman91
+		('prudent-heartcontainer-3610','',''),                   # Fleush vs. DiamondFlash27, includes xwillmarktheplace
+		('lucky-longshot-1478','',''),                           # Moose vs. Princess Kayla
+		('critical-smallkey-2398','',''),                        # Lake_oot vs. Midboss
+		('sublime-cow-6857','',''),                              # Shaggy vs. Hapenfors
+		('clumsy-heartpiece-9095','',''),                        # Amateseru vs. Condor
+		('salty-octorok-5065','',''),                            # Xanra vs. Myelin
+		('disco-nabooru-0288','',''),                            # xwillmarktheplace vs. moosecrap
 
 		# Filter-relevant races
 
-		#'salty-octorok-5065', # Xanra vs. Myelin
-		#'disco-nabooru-0288', # xwillmarktheplace vs. moosecrap
 
 		# Add new races here
 	]
