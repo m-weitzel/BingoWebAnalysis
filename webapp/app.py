@@ -1,7 +1,6 @@
 import os
 from flask import Flask, render_template
-import pickle
-from models import return_goallist, return_playerstats
+from webapp.models import return_goallist, return_playerstats
 
 
 app = Flask(__name__)
