@@ -113,7 +113,7 @@ def pull_races(new_rooms):
 	chrome_options.add_argument("--headless")
 	chrome_options.add_experimental_option('excludeSwitches', ['enable-logging'])
 
-	driver = webdriver.Chrome("D:\Programme\chromedriver.exe", options=chrome_options)
+	driver = webdriver.Chrome("/usr/bin/chromedriver", options=chrome_options)
 	race_result_list = list()
 	for room in new_rooms:
 		race_result = TournamentRace(room, driver)

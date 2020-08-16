@@ -1,6 +1,6 @@
 import os
 from flask import Flask, render_template
-from webapp.models import return_goallist, return_playerstats
+from models import return_goallist, return_playerstats
 
 
 app = Flask(__name__)
