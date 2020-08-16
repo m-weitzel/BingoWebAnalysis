@@ -183,6 +183,6 @@ def pull_seed_range(startseed, save=True):
 	if save:
 		goalcounter = Counter(all_seeds.goals.sum())
 		goal_counting_df = pd.DataFrame({'goal': [d[0] for d in goalcounter.items()], 'count': list(goalcounter.values())}).set_index('goal').sort_values('count')
-		goal_counting_df.to_csv(f'goals/goals{startseed}-{startseed+99}.csv')
+		goal_counting_df.to_csv(os.path.join(ROOT_DIR, f'goals/goals{startseed}-{startseed+99}.csv'))
 
 		print(f'Saved seeds {startseed} to {startseed+100}.')
