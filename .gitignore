@@ -1,3 +1,7 @@
 *.pyc
 __pycache__/
 .idea/
+goals/
+TournamentAnalysis/results/
+TournamentAnalysis/races/
+TournamentAnalysis/2020/
