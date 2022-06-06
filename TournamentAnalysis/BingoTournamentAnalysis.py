@@ -219,7 +219,7 @@ def main():
 			player_list.append(r)
 			list_of_player_names.append(race_result.racer2)
 			player_df = player_df.append(pd.DataFrame({'wins': 0, 'losses': 0}, index=[race_result.racer2]))
-		if race_result.time1 < race_result.time2:
+		if (race_result.time1 < race_result.time2) | (not(race_result.time2.isnumeric())):
 			player_df.loc[race_result.racer1, 'wins'] += 1
 			player_df.loc[race_result.racer2, 'losses'] += 1
 			try:
