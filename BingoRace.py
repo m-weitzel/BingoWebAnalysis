@@ -45,7 +45,7 @@ class BingoRace:
 		timestamp = struct.split('DT')[1].split('.')[0]
 
 	def is_weekly(self):
-		if (self.starttime.weekday() == 5) & (self.starttime.hour in [21, 22]):
+		if (self.starttime.weekday() == 5) & (self.starttime.hour == 22):
 			return True
 		else:
 			eastern = self.starttime.tz_convert(tz='US/Eastern')
