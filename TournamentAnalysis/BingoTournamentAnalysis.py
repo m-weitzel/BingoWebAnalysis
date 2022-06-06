@@ -7,7 +7,8 @@ import os
 from collections import Counter
 import pandas as pd
 import numpy as np
-from BingoTools import find_goal_combinations, is_sarias_row, is_multizl_row, means_medians_from_string_list, timestring_from_timedelta
+from BingoTools import find_goal_combinations, is_sarias_row, is_multizl_row, is_bit_row, is_lacs_row,\
+	means_medians_from_string_list, timestring_from_timedelta
 import json
 import requests
 from datetime import datetime
@@ -130,6 +131,10 @@ def main():
 								p.sarias += 1
 							if is_multizl_row(picked_goals_p1):
 								p.multizl += 1
+							if is_lacs_row(picked_goals_p1):
+								p.lacs += 1
+							if is_bit_row(picked_goals_p1):
+								p.bit += 1
 
 					p.rows.append(race_result.row_p1)
 					p.seeds.append(race_result.seed)
@@ -152,6 +157,10 @@ def main():
 						r.sarias += 1
 					if is_multizl_row(picked_goals_p1):
 						r.multizl += 1
+					if is_lacs_row(picked_goals_p1):
+						r.lacs += 1
+					if is_bit_row(picked_goals_p1):
+						r.bit += 1
 
 			r.seeds.append(race_result.seed)
 
@@ -177,6 +186,10 @@ def main():
 							p.sarias += 1
 						if is_multizl_row(picked_goals_p2):
 							p.multizl += 1
+						if is_bit_row(picked_goals_p2):
+							p.bit += 1
+						if is_lacs_row(picked_goals_p2):
+							p.lacs += 1
 					p.seeds.append(race_result.seed)
 
 		else:
@@ -196,6 +209,11 @@ def main():
 					r.sarias += 1
 				if is_multizl_row(picked_goals_p2):
 					r.multizl += 1
+				if is_lacs_row(picked_goals_p2):
+					r.lacs += 1
+				if is_bit_row(picked_goals_p2):
+					r.bit += 1
+
 			r.seeds.append(race_result.seed)
 
 			player_list.append(r)
@@ -293,6 +311,7 @@ def main():
 									'average': [m[0] for m in means_medians], 'median': [m[1] for m in means_medians],
 									'forfeits': [p.forfeits for p in player_list], 'blanks': [p.blanks for p in player_list],
 									'sarias': [p.sarias for p in player_list], 'multizl': [p.multizl for p in player_list],
+	                                'bit': [p.bit for p in player_list], 'lacs': [p.lacs for p in player_list],
 									# 'mean synergy': [np.mean(p.synergies).round(1) for p in player_list],
 									# 'mean estimate diff': [np.mean(p.diff_to_estimate).round(1) for p in player_list]
 	                                'synergy': [-np.mean(p.diff_to_estimate)/7*100 for p in player_list]
@@ -370,6 +389,9 @@ class Racer:
 		self.sarias = 0
 		self.multizl = 0
 		self.weeklywins = 0
+		self.lacs = 0
+		self.bit = 0
+
 
 	def calc_mean_median(self):
 		return means_medians_from_string_list(self.times)

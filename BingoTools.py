@@ -437,6 +437,26 @@ def is_multizl_row(goallist):
 		return False
 
 
+def is_lacs_row(goallist):
+	lacs_goals = set([g.lower() for g in goallist]).intersection({
+		'light arrows', 'all 3 elemental arrows'
+	})
+	if len(lacs_goals) > 0:
+		return True
+	else:
+		return False
+
+
+def is_bit_row(goallist):
+	bit_goals = set([g.lower() for g in goallist]).intersection({
+		'frog\'s hp', 'all 4 market area skulltulas'
+	})
+	if len(bit_goals) > 0:
+		return True
+	else:
+		return False
+
+
 def means_medians_from_string_list(times_list):
 	actual_times = list()
 	for t in times_list:

@@ -4,7 +4,7 @@ from BingoRace import BingoRace
 from TournamentAnalysis.BingoTournamentAnalysis import find_goal_combinations, Racer
 from collections import Counter
 import pandas as pd
-from BingoTools import means_medians_from_string_list, is_sarias_row, is_multizl_row
+from BingoTools import means_medians_from_string_list, is_sarias_row, is_multizl_row, is_lacs_row, is_bit_row
 import numpy as np
 from datetime import datetime
 import socket
@@ -77,6 +77,10 @@ for i, race in enumerate(all_relevant_races):
 						player_list[a_racer].sarias += 1
 					if is_multizl_row(room_board.goals[a_row]):
 						player_list[a_racer].multizl += 1
+					if is_lacs_row(room_board.goals[a_row]):
+						player_list[a_racer].lacs += 1
+					if is_bit_row(room_board.goals[a_row]):
+						player_list[a_racer].bit += 1
 
 			if win & br.is_weekly():
 				player_list[a_racer].weeklywins += 1
@@ -98,6 +102,11 @@ for i, race in enumerate(all_relevant_races):
 						r.sarias += 1
 					if is_multizl_row(room_board.goals[a_row]):
 						r.multizl += 1
+					if is_lacs_row(room_board.goals[a_row]):
+						r.lacs += 1
+					if is_bit_row(room_board.goals[a_row]):
+						r.bit += 1
+
 			if win & br.is_weekly():
 				r.weeklywins += 1
 			r.seeds.append(br.seed)
@@ -184,6 +193,8 @@ player_df = player_df.merge(pd.DataFrame({'name': [p.name for p in player_list.v
                                           'blanks': [p.blanks for p in player_list.values()],
                                           'sarias': [p.sarias for p in player_list.values()],
                                           'multizl': [p.multizl for p in player_list.values()],
+                                          'bit': [p.bit for p in player_list.values()],
+                                          'lacs': [p.lacs for p in player_list.values()],
                                           # 'mean synergy': [np.mean(p.synergies).round(1) for p in player_list],
                                           # 'mean estimate diff': [np.mean(p.diff_to_estimate).round(1) for p in player_list]
                                           'synergy': [-np.mean(p.diff_to_estimate) / 7 * 100 for p in player_list.values()]
