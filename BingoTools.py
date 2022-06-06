@@ -460,7 +460,7 @@ def is_bit_row(goallist):
 def means_medians_from_string_list(times_list):
 	actual_times = list()
 	for t in times_list:
-		if t is not 'nan' and t != '—' and t != '-':
+		if t != 'nan' and t != '—' and t != '-':
 			actual_times.append(t)
 	if len(actual_times) < 1:
 		return 'nan', 'nan'
