@@ -415,8 +415,8 @@ def classify_row(row):
 
 
 def is_sarias_row(goallist):
-	sarias_goals = set([g.lower() for g in goallist]).intersection(['both hps in lost woods', 'saria\'s song', 'goron bracelet',
-											'green gauntlets'])
+	sarias_goals = set([g.lower() for g in goallist]).intersection({'both hps in lost woods', 'saria\'s song', 'goron bracelet',
+											'green gauntlets'})
 	if len(sarias_goals) > 0:
 		return True
 	else:
@@ -424,13 +424,13 @@ def is_sarias_row(goallist):
 
 
 def is_multizl_row(goallist):
-	zl_goals = set([g.lower() for g in goallist]).intersection(['both hps in lost woods', 'saria\'s song', 'goron bracelet',
+	zl_goals = set([g.lower() for g in goallist]).intersection({'both hps in lost woods', 'saria\'s song', 'goron bracelet',
 											'green gauntlets', 'double magic', 'double defense', 'two fairy spells', 'nayru\'s love',
 											'farore\'s wind',
 											'all 5 skulltulas in shadow temple', 'obtain all 5 small keys in shadow temple',
 											'map \& compass in spirit temple', 'all 5 skulltulas in water temple',
 											'get to the end of light trial', '6 songs', '7 songs', '8 songs', '9 songs', '10 songs',
-											'spirit temple boss key', 'all 3 elemental arrows', 'spirit temple boss key',])
+											'spirit temple boss key', 'all 3 elemental arrows', 'spirit temple boss key',})
 	if len(zl_goals) > 1:
 		return True
 	else:
