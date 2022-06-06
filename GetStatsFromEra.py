@@ -7,6 +7,7 @@ import pandas as pd
 from BingoTools import means_medians_from_string_list, is_sarias_row, is_multizl_row
 import numpy as np
 from datetime import datetime
+import socket
 
 page = 1
 all_relevant_races = []
@@ -36,7 +37,13 @@ player_df = pd.DataFrame(columns=['name']).set_index('name')
 print(f'Found {len(all_relevant_races)} races.')
 
 for i, race in enumerate(all_relevant_races):
-	br = BingoRace(race)
+	while True:
+		try:
+			br = BingoRace(race)
+			break
+		except (ConnectionError, socket.gaierror):
+			print('No connection, retrying...')
+
 	room_board = br.board.board
 	combis = [find_goal_combinations(sorted(combi_row)) for combi_row in room_board.goals]
 	available_combinations.extend(list(pd.concat(combis)['goal combination']))

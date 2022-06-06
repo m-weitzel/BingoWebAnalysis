@@ -1,3 +1,5 @@
+import socket
+
 import pandas as pd
 from collections import Counter
 import time
@@ -322,7 +324,12 @@ def pull_boards_from_api(seeds, version):
 	except TypeError:
 		str_seeds = str(seeds)
 
-	api_boards = requests.get(f'{api_point}?version={version}&mode={mode}&seeds={str_seeds}')
+	while True:
+		try:
+			api_boards = requests.get(f'{api_point}?version={version}&mode={mode}&seeds={str_seeds}')
+			break
+		except (ConnectionError, socket.gaierror):
+			print('Connection error, retrying...')
 
 	boards_df = pd.json_normalize(api_boards.json()['boards'])
 	return boards_df
